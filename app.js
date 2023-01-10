@@ -20,11 +20,9 @@ import User from "./models/user.js";
 import mongoSanitize from "express-mongo-sanitize";
 import MongoStore from "connect-mongo";
 
-const dbUrl = "mongodb://localhost:27017/yelp-camp";
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelp-camp";
 
 // connecting with thw database
-// mongodb+srv://Jatin:iHeUOB5XFLQ5KScC@cluster0.hukpc6c.mongodb.net/?retryWrites=true&w=majority
-// mongodb://localhost:27017/yelp-camp
 mongoose
   .connect(dbUrl, {
     useNewUrlParser: true,
@@ -59,11 +57,13 @@ store.on("error", function (e) {
   console.log("SESSION STORE ERROR >> ", e);
 });
 
+const Secret = process.env.SECRET || "thisshouldbeagoodlogic";
+
 // creating the session
 const sessionConfig = {
   store,
   name: "session",
-  secret: "thisshouldbeagoodlogic",
+  secret: Secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
